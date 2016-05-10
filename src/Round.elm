@@ -1,6 +1,7 @@
 module Round where
 
 import String
+import Native.Round
 
 roundNum : Int -> Float -> Float
 roundNum =
@@ -132,48 +133,48 @@ roundFun functor s fl =
         (before, after) =
           toDecimal fl
             |> splitComma 
-            --|> Debug.log "(before,after)"
+            |> Debug.log "(before,after)"
         a = 
           --String.left (s+1) after 
           after
             |> String.padRight (s+1) '0'
-              --|> Debug.log "a" 
+              |> Debug.log "a" 
 
         b = String.left s a
-              --|> Debug.log "b" 
+              |> Debug.log "b" 
         c = String.dropLeft s a --String.right 1 a
-              --|> Debug.log "c" 
+              |> Debug.log "c" 
         e = 10^s
-              --|> Debug.log "e" 
+              |> Debug.log "e" 
         f =
           ( if fl < 0
             then "-"
             else ""
           ) ++"1"++b++"."++c
-              --|> Debug.log "f1"
+              |> Debug.log "f1"
             |> String.toFloat
             |> Result.toMaybe
-              --|> Debug.log "f2"
+              |> Debug.log "f2"
             |> Maybe.withDefault e
-              --|> Debug.log "f3"
+              |> Debug.log "f3"
             |> functor
-              --|> Debug.log "f"
+              |> Debug.log "f"
         n =
           if fl < 0
             then -1
             else 1
-              --|> Debug.log "n"
+              |> Debug.log "n"
         dd =
           if fl < 0
             then 2
             else 1
-              --|> Debug.log "dd"
+              |> Debug.log "dd"
         g =
           Basics.toString f |> String.dropLeft dd
-              --|> Debug.log "g"
+              |> Debug.log "g"
 
         h =
-          Basics.truncate fl
+          (Debug.log "truncate" <| Native.Round.truncate fl)
           + ( if f - (e*n) == (e*n)
                 then 
                   if fl < 0
@@ -182,7 +183,7 @@ roundFun functor s fl =
                 else
                   0
             )
-              --|> Debug.log "h"
+              |> Debug.log "h"
 
         j = Basics.toString h
 

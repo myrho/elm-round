@@ -1,7 +1,6 @@
 module Round where
 
 import String
-import Native.Round
 
 roundNum : Int -> Float -> Float
 roundNum =
@@ -161,7 +160,7 @@ roundFun functor s fl =
           Basics.toString f |> String.dropLeft dd
 
         h =
-          Native.Round.truncate fl
+          truncate fl
           + ( if f - (e*n) == (e*n)
                 then 
                   if fl < 0
@@ -193,3 +192,9 @@ ceil =
 floor : Int -> Float -> String
 floor =
   roundFun Basics.floor
+
+truncate : Float -> Int
+truncate n =
+  if n < 0
+    then Basics.ceiling n
+    else Basics.floor n

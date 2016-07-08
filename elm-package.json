@@ -1,12 +1,12 @@
 {
-    "version": "0.0.1",
+    "version": "0.0.2",
     "summary": "Floating-Point-Arithmetic safe numbers rounding",
     "repository": "http://localhost/git/elm-round.git",
     "license": "BSD3",
     "source-directories": [
         "src"
     ],
-    "native-modules": true,
+    "native-modules": false,
     "exposed-modules": [],
     "dependencies": {
         "elm-lang/core": "3.0.0 <= v < 4.0.0"

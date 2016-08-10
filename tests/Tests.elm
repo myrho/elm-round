@@ -1,6 +1,7 @@
-module Tests where
+module Tests exposing (..)
 
-import ElmTest exposing (..)
+import Test exposing (..)
+import Expect exposing (equal)
 
 import Round
 
@@ -537,17 +538,17 @@ decimal =
 
 all : Test
 all =
-  suite "All"
+  describe "All"
     [ roundTest, ceilTest, scientificTest 
     ]
 
 roundTest : Test
 roundTest =
-    suite "round"
+    describe "round"
       <| ( List.map2
             (\a b -> 
               test ("round 0 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.round 0 b))
+              <| \() -> equal a (Round.round 0 b))
             dataRound0
             dataFloat
          )
@@ -555,7 +556,7 @@ roundTest =
          ( List.map2
             (\a b -> 
               test ("round 1 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.round 1 b))
+              <| \() -> equal a (Round.round 1 b))
             dataRound1
             dataFloat
          )
@@ -563,78 +564,78 @@ roundTest =
          ( List.map2
             (\a b -> 
               test ("round 2 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.round 2 b))
+              <| \() -> equal a (Round.round 2 b))
             dataRound2
             dataFloat
          )
 
 ceilTest : Test
 ceilTest =
-    suite "ceil"
+    describe "ceil"
       <| ( List.map2
             (\a b -> 
               test ("ceil 0 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.ceil 0 b))
+              <| \() -> equal a (Round.ceil 0 b))
             dataCeil0
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("ceil 1 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.ceil 1 b))
+              <| \() -> equal a (Round.ceil 1 b))
             dataCeil1
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("ceil 2 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.ceil 2 b))
+              <| \() -> equal a (Round.ceil 2 b))
             dataCeil2
             dataFloat
          )
 
 floorTest : Test
 floorTest =
-    suite "floor"
+    describe "floor"
       <| ( List.map2
             (\a b -> 
               test ("floor 0 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.floor 0 b))
+              <| \() -> equal a (Round.floor 0 b))
             dataFloor0
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("floor 1 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.floor 1 b))
+              <| \() -> equal a (Round.floor 1 b))
             dataFloor1
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("floor 2 "++(toString b)++" to "++a) 
-              <| assertEqual a (Round.floor 2 b))
+              <| \() -> equal a (Round.floor 2 b))
             dataFloor2
             dataFloat
          )
 
 scientificTest : Test
 scientificTest =
-    suite "scientific"
+    describe "scientific"
        ( List.map2
           (\a b ->
             test ("toDecimal "++(toString b)++" to "++a)
-            <| assertEqual a (Round.toDecimal b))
+            <| \() -> equal a (Round.toDecimal b))
           decimal
           scientific
        )
 
 elmTest : Test
 elmTest =
-  suite "elmTest"
-    [ test "test Basics.round" <| assertEqual -5 (Basics.round -5.5)
-    , test "test Basics.ceil" <| assertEqual -1 (Basics.ceiling -1.1)
-    , test "test Basics.ceil" <| assertEqual -1 (Basics.ceiling -1.9)
-    , test "test Basics.floor" <| assertEqual -2 (Basics.floor -1.1)
-    , test "test Basics.floor" <| assertEqual -2 (Basics.floor -1.9)
+  describe "elmTest"
+    [ test "test Basics.round" <| \() -> equal -5 (Basics.round -5.5)
+    , test "test Basics.ceil" <| \() -> equal -1 (Basics.ceiling -1.1)
+    , test "test Basics.ceil" <| \() -> equal -1 (Basics.ceiling -1.9)
+    , test "test Basics.floor" <| \() -> equal -2 (Basics.floor -1.1)
+    , test "test Basics.floor" <| \() -> equal -2 (Basics.floor -1.9)
     ]

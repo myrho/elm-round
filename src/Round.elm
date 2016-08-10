@@ -1,4 +1,8 @@
-module Round where
+module Round exposing 
+  ( roundNum, floorNum, ceilNum
+  , floorNumMerc, ceilNumMerc
+  , toDecimal, round, ceil, floor, truncate
+  )
 
 import String
 

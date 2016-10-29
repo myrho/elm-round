@@ -23,7 +23,7 @@ data =
 
 decimalTest : Test
 decimalTest =
-  describe "scientific"
+  describe "decimal"
      ( List.map
         (\(b,a) ->
           test ("toDecimal "++(toString b)++" to "++a)

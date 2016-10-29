@@ -162,21 +162,21 @@ ceilTest =
       <| ( List.map2
             (\a b -> 
               test ("ceil 0 "++(toString b)++" to "++a) 
-              <| \() -> equal a (Round.ceil 0 b))
+              <| \() -> equal a (Round.ceiling 0 b))
             dataCeil0
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("ceil 1 "++(toString b)++" to "++a) 
-              <| \() -> equal a (Round.ceil 1 b))
+              <| \() -> equal a (Round.ceiling 1 b))
             dataCeil1
             dataFloat
          )
       ++ ( List.map2
             (\a b -> 
               test ("ceil 2 "++(toString b)++" to "++a) 
-              <| \() -> equal a (Round.ceil 2 b))
+              <| \() -> equal a (Round.ceiling 2 b))
             dataCeil2
             dataFloat
          )

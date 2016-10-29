@@ -1,45 +1,16 @@
 module Round exposing 
-  ( roundNum, floorNum, ceilNum
-  , floorNumMerc, ceilNumMerc
-  , toDecimal, round, ceil, floor, truncate
+  ( roundNum, floorNum, ceilingNum
+  , floorNumMerc, ceilingNumMerc
+  , toDecimal, round, ceiling, floor, truncate
   )
 
 import String
 
-roundNum : Int -> Float -> Float
-roundNum =
-  funNum round
-
-floorNum : Int -> Float -> Float
-floorNum =
-  funNum floor
-
-ceilNum : Int -> Float -> Float
-ceilNum =
-  funNum ceil
-
-floorNumMerc : Int -> Float -> Float
-floorNumMerc s fl =
-  if fl < 0
-    then 
-      ceilNum s fl
-    else
-      floorNum s fl
-
-ceilNumMerc : Int -> Float -> Float
-ceilNumMerc s fl =
-  if fl < 0
-    then 
-      floorNum s fl
-    else
-      ceilNum s fl
-
-funNum : (Int -> Float -> String) -> Int -> Float -> Float
-funNum fun s fl =
-  Maybe.withDefault (1/0)
-  <| Result.toMaybe
-  <| String.toFloat
-  <| fun s fl
+truncate : Float -> Int
+truncate n =
+  if n < 0
+    then Basics.ceiling n
+    else Basics.floor n
 
 toDecimal : Float -> String
 toDecimal fl =
@@ -189,16 +160,76 @@ round : Int -> Float -> String
 round =
   roundFun Basics.round
 
-ceil : Int -> Float -> String
-ceil =
+ceiling : Int -> Float -> String
+ceiling =
   roundFun Basics.ceiling
 
 floor : Int -> Float -> String
 floor =
   roundFun Basics.floor
 
-truncate : Float -> Int
-truncate n =
-  if n < 0
-    then Basics.ceiling n
-    else Basics.floor n
+roundMerc : Int -> Float -> String
+roundMerc =
+  roundFun 
+    (\fl ->
+      let
+        dec = 
+          fl - (toFloat <| truncate fl)
+      in
+        if dec >= 0.5
+          then
+            Basics.ceiling fl
+        else if dec <= -0.5
+          then 
+            Basics.floor fl
+          else
+            Basics.round fl
+    )
+
+floorMerc : Int -> Float -> String
+floorMerc s fl =
+  if fl < 0
+    then 
+      ceiling s fl
+    else
+      floor s fl
+
+ceilingMerc : Int -> Float -> String
+ceilingMerc s fl =
+  if fl < 0
+    then 
+      floor s fl
+    else
+      ceiling s fl
+
+roundNum : Int -> Float -> Float
+roundNum =
+  funNum round
+
+floorNum : Int -> Float -> Float
+floorNum =
+  funNum floor
+
+ceilingNum : Int -> Float -> Float
+ceilingNum =
+  funNum ceiling
+
+roundNumMerc : Int -> Float -> Float
+roundNumMerc =
+  funNum roundMerc
+
+floorNumMerc : Int -> Float -> Float
+floorNumMerc =
+  funNum floorMerc
+
+ceilingNumMerc : Int -> Float -> Float
+ceilingNumMerc =
+  funNum ceilingMerc
+
+funNum : (Int -> Float -> String) -> Int -> Float -> Float
+funNum fun s fl =
+  Maybe.withDefault (1/0)
+  <| Result.toMaybe
+  <| String.toFloat
+  <| fun s fl
+

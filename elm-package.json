@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "Floating-Point-Arithmetic safe numbers rounding",
-    "repository": "http://localhost/git/elm-round.git",
+    "repository": "https://github.com/myrho/elm-round.git",
     "license": "BSD3",
     "source-directories": [
         "src"

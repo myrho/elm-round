@@ -33,15 +33,15 @@ Have a look at the tests for more examples!
 
 Under the hood the `Float` is 
 
-  # converted to a string
-  # normalized (if it is in scientific notation, eg `1.234e-23`)
-  # splitted at the comma.
-  # The the part after comma is truncated to the number of desired digits + 1
-  # inserting a comma before the last digit,
-  # turning this into a `Float` again,
-  # apply a rounding function on it,
-  # attach it the part before comma again.
-  # By the way handles cases with already rounded numbers, zero and the sign.
+  * converted to a string
+  * normalized (if it is in scientific notation, eg `1.234e-23`)
+  * splitted at the comma.
+  * Then the part after comma is truncated to the number of desired digits + 1
+  * inserting a comma before the last digit,
+  * turning this into a `Float` again,
+  * apply a rounding function on it,
+  * attach it the part before comma again.
+  * By the way handles cases with already rounded numbers, zero and the sign.
 
 Why aren't we just doing `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in order to round to 3 digits after comma? Because due to floating point arithmetic it might happen that it outputs someting like `3.1416000000001`, although we just wanted `3.1416`. Ugly.
 

@@ -1,7 +1,9 @@
 module Round exposing 
   ( roundNum, floorNum, ceilingNum
   , floorNumMerc, ceilingNumMerc
-  , toDecimal, round, ceiling, floor, truncate
+  , toDecimal
+  , round, ceiling, floor, truncate
+  , roundMerc, ceilingMerc, floorMerc
   )
 
 import String
@@ -168,6 +170,8 @@ floor : Int -> Float -> String
 floor =
   roundFun Basics.floor
 
+{-| Away from zero
+-}
 roundMerc : Int -> Float -> String
 roundMerc =
   roundFun 

@@ -1,9 +1,9 @@
 module Round exposing 
   ( roundNum, floorNum, ceilingNum
-  , floorNumMerc, ceilingNumMerc
+  , floorNumCom, ceilingNumCom
   , toDecimal
   , round, ceiling, floor, truncate
-  , roundMerc, ceilingMerc, floorMerc
+  , roundCom, ceilingCom, floorCom
   )
 
 import String
@@ -172,8 +172,8 @@ floor =
 
 {-| Away from zero
 -}
-roundMerc : Int -> Float -> String
-roundMerc =
+roundCom : Int -> Float -> String
+roundCom =
   roundFun 
     (\fl ->
       let
@@ -190,16 +190,16 @@ roundMerc =
             Basics.round fl
     )
 
-floorMerc : Int -> Float -> String
-floorMerc s fl =
+floorCom : Int -> Float -> String
+floorCom s fl =
   if fl < 0
     then 
       ceiling s fl
     else
       floor s fl
 
-ceilingMerc : Int -> Float -> String
-ceilingMerc s fl =
+ceilingCom : Int -> Float -> String
+ceilingCom s fl =
   if fl < 0
     then 
       floor s fl
@@ -218,17 +218,17 @@ ceilingNum : Int -> Float -> Float
 ceilingNum =
   funNum ceiling
 
-roundNumMerc : Int -> Float -> Float
-roundNumMerc =
-  funNum roundMerc
+roundNumCom : Int -> Float -> Float
+roundNumCom =
+  funNum roundCom
 
-floorNumMerc : Int -> Float -> Float
-floorNumMerc =
-  funNum floorMerc
+floorNumCom : Int -> Float -> Float
+floorNumCom =
+  funNum floorCom
 
-ceilingNumMerc : Int -> Float -> Float
-ceilingNumMerc =
-  funNum ceilingMerc
+ceilingNumCom : Int -> Float -> Float
+ceilingNumCom =
+  funNum ceilingCom
 
 funNum : (Int -> Float -> String) -> Int -> Float -> Float
 funNum fun s fl =

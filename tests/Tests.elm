@@ -4,22 +4,22 @@ import Test exposing (..)
 import Expect exposing (equal)
 
 import TestRound exposing (..)
-import TestRoundMerc exposing (..)
+import TestRoundCom exposing (..)
 import TestFloor exposing (..)
-import TestFloorMerc exposing (..)
+import TestFloorCom exposing (..)
 import TestCeil exposing (..)
-import TestCeilMerc exposing (..)
+import TestCeilCom exposing (..)
 import TestDecimal exposing (..)
 
 all : Test
 all =
   describe "All"
     [ roundTest
-    , roundMercTest
+    , roundComTest
     , ceilTest
-    , ceilMercTest
+    , ceilComTest
     , floorTest
-    , floorMercTest
+    , floorComTest
     , decimalTest 
     ]
 

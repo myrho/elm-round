@@ -1,4 +1,4 @@
-module TestFloorMerc exposing (floorMercTest)
+module TestFloorCom exposing (floorComTest)
 
 import Test exposing (..)
 import Expect exposing (equal)
@@ -64,6 +64,6 @@ data =
   ,(-4.9999,"-4","-4.9","-4.99")
   ]
 
-floorMercTest : Test
-floorMercTest =
-  testFunction "floorMerc" Round.floorMerc data
+floorComTest : Test
+floorComTest =
+  testFunction "floorCom" Round.floorCom data

@@ -49,5 +49,4 @@ From the root of your [Elm](http://elm-lang.org) project run
 
 | Version | Notes |
 | ------- | ----- |
-| 2.0.0   | First official release, streamlined API and tests, docs added |
-| 1.0.0   | Internal only |
+| 1.0.0   | First official release, streamlined API and tests, docs added |

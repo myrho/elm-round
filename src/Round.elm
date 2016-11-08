@@ -6,7 +6,10 @@ module Round exposing
   , toDecimal, truncate
   )
 
-{-| This library empowers you to convert a `Float` to a `String` with ultimate control how many digits after the decimal point are shown and how the remaining digits are rounded. You can round, round up and round down the mathematical or the commerical way. For example:
+{-| This library empowers you to convert a `Float` to a `String` with ultimate 
+control how many digits after the decimal point are shown and how the remaining 
+digits are rounded. You can round, round up and round down the mathematical or 
+the commerical way. For example:
 
     x = 3.141592653589793
 
@@ -16,7 +19,10 @@ module Round exposing
     ceiling 2 x -- "3.15"
     floor 4 x -- "3.1415"
 
-[Commercial rounding](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero) means that negative and positive numbers are treated symmetrically. It affects numbers whose last digit equals 5. For example:
+[Commercial 
+rounding](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero) 
+means that negative and positive numbers are treated symmetrically. It affects 
+numbers whose last digit equals 5. For example:
 
     x = -0.5
 
@@ -43,7 +49,10 @@ Under the hood the `Float` is
   * attach it the part before comma again.
   * By the way handles cases with already rounded numbers, zero and the sign.
 
-Why aren't we just doing `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in order to round to 3 digits after comma? Because due to floating point arithmetic it might happen that it outputs someting like `3.1416000000001`, although we just wanted `3.1416`. Ugly.
+Why aren't we just doing `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in 
+order to round to 3 digits after comma? Because due to floating point 
+arithmetic it might happen that it outputs someting like `3.1416000000001`, 
+although we just wanted `3.1416`. Ugly.
 
 # Round to String
 @docs round, ceiling, floor, roundCom, ceilingCom, floorCom
@@ -58,7 +67,8 @@ Why aren't we just doing `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in or
 
 import String
 
-{-| Like Elm's basic `truncate` but works on the full length of a float's 64 bits. So it's more precise.
+{-| Like Elm's basic `truncate` but works on the full length of a float's 64 
+bits. So it's more precise.
 
     x = 9007199254740.99
 
@@ -71,7 +81,8 @@ truncate n =
     then Basics.ceiling n
     else Basics.floor n
 
-{-| Transforms a `Float` in scientific notation into its decimal representation as a `String`.
+{-| Transforms a `Float` in scientific notation into its decimal representation 
+as a `String`.
 
     x = 1e30
     toDecimal x -- outputs "1000000000000000000000000000000"
@@ -224,7 +235,8 @@ roundFun functor s fl =
           ++ "."
           ++ g
 
-{-| Turns a `Float` into a `String` and rounds it to the given number of digits after decimal point.
+{-| Turns a `Float` into a `String` and rounds it to the given number of digits 
+after decimal point.
 
     x = 3.141592653589793
 
@@ -235,7 +247,8 @@ round : Int -> Float -> String
 round =
   roundFun Basics.round
 
-{-| Turns a `Float` into a `String` and rounds it up to the given number of digits after decimal point.
+{-| Turns a `Float` into a `String` and rounds it up to the given number of 
+digits after decimal point.
 
     x = 3.141592653589793
 
@@ -246,7 +259,8 @@ ceiling : Int -> Float -> String
 ceiling =
   roundFun Basics.ceiling
 
-{-| Turns a `Float` into a `String` and rounds it down to the given number of digits after decimal point.
+{-| Turns a `Float` into a `String` and rounds it down to the given number of 
+digits after decimal point.
 
     x = 3.141592653589793
 
@@ -257,7 +271,8 @@ floor : Int -> Float -> String
 floor =
   roundFun Basics.floor
 
-{-| Turns a `Float` into a `String` and rounds it to the given number of digits after decimal point the commercial way.
+{-| Turns a `Float` into a `String` and rounds it to the given number of digits 
+after decimal point the commercial way.
 
     x = -0.5
 
@@ -282,7 +297,8 @@ roundCom =
             Basics.round fl
     )
 
-{-| Turns a `Float` into a `String` and rounds it down to the given number of digits after decimal point the commercial way.
+{-| Turns a `Float` into a `String` and rounds it down to the given number of 
+digits after decimal point the commercial way.
 
     x = -0.5
 
@@ -297,7 +313,8 @@ floorCom s fl =
     else
       floor s fl
 
-{-| Turns a `Float` into a `String` and rounds it up to the given number of digits after decimal point the commercial way.
+{-| Turns a `Float` into a `String` and rounds it up to the given number of 
+digits after decimal point the commercial way.
 
     x = -0.5
 

@@ -49,4 +49,5 @@ From the root of your [Elm](http://elm-lang.org) project run
 
 | Version | Notes |
 | ------- | ----- |
+| 1.0.1   | Upgrade to Elm 0.18 |
 | 1.0.0   | First official release, streamlined API and tests, docs added |

@@ -200,7 +200,7 @@ roundFun functor s fl =
           ) ++"1"++b++"."++c
             |> String.toFloat
             |> Result.toMaybe
-            |> Maybe.withDefault e
+            |> Maybe.withDefault (toFloat e)
             |> functor
         n =
           if fl < 0

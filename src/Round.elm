@@ -72,8 +72,8 @@ bits. So it's more precise.
 
     x = 9007199254740.99
 
-    Basics.truncate x -- outputs 652835028 (which is not correct)
-    Round.truncate x -- output 9007199254740 (which is)
+    Basics.truncate x -- 652835028 (which is not correct)
+    Round.truncate x -- 9007199254740 (which is)
 -}
 truncate : Float -> Int
 truncate n =

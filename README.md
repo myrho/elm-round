@@ -10,6 +10,16 @@ This [Elm](http://elm-lang.org) library empowers you to convert a `Float` to a `
     ceiling 2 x -- "3.15"
     floor 4 x -- "3.1415"
 
+The number of digits after decimal point can also be negative.
+
+    x = 213.14
+
+    round -2 x -- "200"
+    round -1 x -- "210"
+    
+    ceiling -2 x -- "300"
+    floor -3 x -- "0"
+
 [Commercial rounding](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero) means that negative and positive numbers are treated symmetrically. It affects numbers whose last digit equals 5. For example:
 
     x = -0.5

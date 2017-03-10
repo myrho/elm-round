@@ -19,6 +19,16 @@ the commerical way. For example:
     ceiling 2 x -- "3.15"
     floor 4 x -- "3.1415"
 
+The number of digits after decimal point can also be negative.
+
+    x = 213.14
+
+    round -2 x -- "200"
+    round -1 x -- "210"
+    
+    ceiling -2 x -- "300"
+    floor -3 x -- "0"
+
 [Commercial 
 rounding](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero) 
 means that negative and positive numbers are treated symmetrically. It affects 
@@ -178,10 +188,21 @@ splitComma str =
 
 roundFun : (Float -> Int) -> Int -> Float -> String
 roundFun functor s fl =
-  if s <= 0
-    then 
-      functor fl |> Basics.toString
-    else
+  if s == 0 then 
+    functor fl |> Basics.toString
+  else if s < 0 then
+    toFloat s
+      |> abs 
+      |> (^) 10
+      |> (/) fl
+      |> roundFun functor 0
+      |> (\r ->
+            if r /= "0" then
+              r ++ (String.repeat (abs s) "0")
+            else
+              r
+         )
+  else
       let
         (before, after) =
           toDecimal fl
@@ -242,6 +263,13 @@ after decimal point.
 
     round 2 x -- "3.14"
     round 4 x -- "3.1416"
+
+The number of digits after decimal point can also be negative.
+
+    x = 213.35
+
+    round -2 x -- "200"
+    round -1 x -- "210"
 -}
 round : Int -> Float -> String
 round =
@@ -254,6 +282,13 @@ digits after decimal point.
 
     ceiling 2 x -- "3.15"
     ceiling 4 x -- "3.1416"
+
+The number of digits after decimal point can also be negative.
+
+    x = 213.35
+
+    ceiling -2 x -- "300"
+    ceiling -1 x -- "220"
 -}
 ceiling : Int -> Float -> String
 ceiling =
@@ -266,6 +301,13 @@ digits after decimal point.
 
     floor 2 x -- "3.14"
     floor 4 x -- "3.1415"
+
+The number of digits after decimal point can also be negative.
+
+    x = 213.35
+
+    floor -2 x -- "200"
+    floor -1 x -- "210"
 -}
 floor : Int -> Float -> String
 floor =
@@ -278,6 +320,8 @@ after decimal point the commercial way.
 
     round 0 x -- "0"
     roundCom 0 x -- "-1"
+
+The number of digits after decimal point can also be negative.
 -}
 roundCom : Int -> Float -> String
 roundCom =
@@ -304,6 +348,8 @@ digits after decimal point the commercial way.
 
     floor 0 x -- "-1"
     floorCom 0 x -- "0"
+
+The number of digits after decimal point can also be negative.
 -}
 floorCom : Int -> Float -> String
 floorCom s fl =
@@ -320,6 +366,8 @@ digits after decimal point the commercial way.
 
     ceiling 0 x -- "0"
     ceilingCom 0 x -- "-1"
+
+The number of digits after decimal point can also be negative.
 -}
 ceilingCom : Int -> Float -> String
 ceilingCom s fl =

@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "summary": "Round floats (mathematically/commercially) to a given number of decimal places",
     "repository": "https://github.com/myrho/elm-round.git",
     "license": "BSD3",

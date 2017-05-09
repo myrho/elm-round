@@ -1,9 +1,10 @@
 module Round exposing 
-  ( round, ceiling, floor
+  ( round, roundWith, ceiling, floor
   , roundCom, ceilingCom, floorCom
   , roundNum, floorNum, ceilingNum
   , roundNumCom, floorNumCom, ceilingNumCom
   , toDecimal, truncate
+  , defaultOptions, Options
   )
 
 {-| This library empowers you to convert a `Float` to a `String` with ultimate 
@@ -186,8 +187,8 @@ splitComma str =
       ("0","0")
 
 
-roundFun : (Float -> Int) -> Int -> Float -> String
-roundFun functor s fl =
+roundFun : Options -> (Float -> Int) -> Int -> Float -> String
+roundFun options functor s fl =
   if s == 0 then 
     functor fl |> Basics.toString
   else if s < 0 then
@@ -195,7 +196,7 @@ roundFun functor s fl =
       |> abs 
       |> (^) 10
       |> (/) fl
-      |> roundFun functor 0
+      |> roundFun options functor 0
       |> (\r ->
             if r /= "0" then
               r ++ (String.repeat (abs s) "0")
@@ -253,8 +254,17 @@ roundFun functor s fl =
             else j
       in
         i
-          ++ "."
+          ++ (String.fromChar options.decimalSeparator)
           ++ g
+
+type alias Options =
+  { decimalSeparator : Char
+  }
+
+defaultOptions : Options
+defaultOptions =
+  { decimalSeparator = '.'
+  }
 
 {-| Turns a `Float` into a `String` and rounds it to the given number of digits 
 after decimal point.
@@ -273,7 +283,29 @@ The number of digits after decimal point can also be negative.
 -}
 round : Int -> Float -> String
 round =
-  roundFun Basics.round
+  roundFun defaultOptions Basics.round
+
+{-| Turns a `Float` into a `String` and rounds it to the given number of digits
+after decimal point, using the provided options.
+
+    x = 3.141592653589793
+    options = { defaultOptions | decimalSeparator = ',' }
+
+    roundWith options 2 x -- "3,14"
+    roundWith options 4 x -- "3,1416"
+
+If the number of digits after decimal separator is negative, the 
+`decimalSeparator` option has no effect.
+
+    x = 213.35
+    options = { defaultOptions | decimalSeparator = ',' }
+
+    roundWith options -2 x -- "200"
+    roundWith options -1 x -- "210"
+-}
+roundWith : Options -> Int -> Float -> String
+roundWith options =
+  roundFun options Basics.round
 
 {-| Turns a `Float` into a `String` and rounds it up to the given number of 
 digits after decimal point.
@@ -292,7 +324,7 @@ The number of digits after decimal point can also be negative.
 -}
 ceiling : Int -> Float -> String
 ceiling =
-  roundFun Basics.ceiling
+  roundFun defaultOptions Basics.ceiling
 
 {-| Turns a `Float` into a `String` and rounds it down to the given number of 
 digits after decimal point.
@@ -311,7 +343,7 @@ The number of digits after decimal point can also be negative.
 -}
 floor : Int -> Float -> String
 floor =
-  roundFun Basics.floor
+  roundFun defaultOptions Basics.floor
 
 {-| Turns a `Float` into a `String` and rounds it to the given number of digits 
 after decimal point the commercial way.
@@ -326,6 +358,7 @@ The number of digits after decimal point can also be negative.
 roundCom : Int -> Float -> String
 roundCom =
   roundFun 
+    defaultOptions
     (\fl ->
       let
         dec = 

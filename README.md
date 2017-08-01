@@ -55,6 +55,10 @@ From the root of your [Elm](http://elm-lang.org) project run
 
     elm package install myrho/elm-round
 
+Import it in your Elm modules:
+
+    import Round exposing (..)
+
 ## Releases
 
 | Version | Notes |

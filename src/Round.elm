@@ -103,7 +103,7 @@ as a `String`.
 toDecimal : Float -> String
 toDecimal fl =
   case String.split "e"
-        <| Basics.toString fl of
+        <| String.fromFloat fl of
     num :: exp :: _ ->
       let
         e = 
@@ -111,7 +111,6 @@ toDecimal fl =
               then String.dropLeft 1 exp
               else exp
           ) |> String.toInt
-            |> Result.toMaybe
             |> Maybe.withDefault 0
         (sign, before,after) =
           let
@@ -189,7 +188,7 @@ splitComma str =
 roundFun : (Float -> Int) -> Int -> Float -> String
 roundFun functor s fl =
   if s == 0 then 
-    functor fl |> Basics.toString
+    functor fl |> String.fromInt
   else if s < 0 then
     toFloat s
       |> abs 
@@ -220,7 +219,6 @@ roundFun functor s fl =
             else ""
           ) ++"1"++b++"."++c
             |> String.toFloat
-            |> Result.toMaybe
             |> Maybe.withDefault (toFloat e)
             |> functor
         n =
@@ -232,7 +230,7 @@ roundFun functor s fl =
             then 2
             else 1
         g =
-          Basics.toString f |> String.dropLeft dd
+          String.fromInt f |> String.dropLeft dd
 
         h =
           truncate fl
@@ -245,7 +243,7 @@ roundFun functor s fl =
                   0
             )
 
-        j = Basics.toString h
+        j = String.fromInt h
 
         i =
           if j == "0" && f-(e*n) /= 0 && fl < 0 && fl > -1
@@ -416,7 +414,6 @@ ceilingNumCom =
 funNum : (Int -> Float -> String) -> Int -> Float -> Float
 funNum fun s fl =
   Maybe.withDefault (1/0)
-  <| Result.toMaybe
   <| String.toFloat
   <| fun s fl
 

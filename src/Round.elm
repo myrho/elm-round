@@ -6,10 +6,11 @@ module Round exposing
   , toDecimal, truncate
   )
 
-{-| This library empowers you to convert a `Float` to a `String` with ultimate 
+{-| This library converts a `Float` to a `String` with ultimate 
 control how many digits after the decimal point are shown and how the remaining 
-digits are rounded. You can round, round up and round down the mathematical or 
-the commerical way. For example:
+digits are rounded. It rounds, floors and ceils the "common" way (ie. [half up](https://en.wikipedia.org/wiki/Rounding#Round_half_up)) or the "commerical" way (ie. [half away from zero](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero)). 
+
+Example:
 
     x = 3.141592653589793
 
@@ -19,7 +20,7 @@ the commerical way. For example:
     ceiling 2 x -- "3.15"
     floor 4 x -- "3.1415"
 
-The number of digits after decimal point can also be negative.
+The given number of digits after decimal point can also be negative.
 
     x = 213.14
 
@@ -47,22 +48,12 @@ numbers whose last digit equals 5. For example:
 
 Have a look at the tests for more examples!
 
-Under the hood the `Float` is 
+Why couldn't you just do `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in 
+order to round to 3 digits after comma? Due to floating point 
+arithmetic it might happen that it results into someting like `3.1416000000001`, 
+although we just wanted `3.1416`. 
 
-  * converted to a string
-  * normalized (if it is in scientific notation, eg `1.234e-23`)
-  * splitted at the comma.
-  * Then the part after comma is truncated to the number of desired digits + 1
-  * inserting a comma before the last digit,
-  * turning this into a `Float` again,
-  * apply a rounding function on it,
-  * attach it the part before comma again.
-  * By the way handles cases with already rounded numbers, zero and the sign.
-
-Why aren't we just doing `x * 1000 |> round |> toFloat |> (flip (/)) 1000` in 
-order to round to 3 digits after comma? Because due to floating point 
-arithmetic it might happen that it outputs someting like `3.1416000000001`, 
-although we just wanted `3.1416`. Ugly.
+Under the hood this library converts the `Float` into a `String` and rounds it char-wise. Hence it's safe from floating point arithmetic weirdness.
 
 # Round to String
 @docs round, ceiling, floor, roundCom, ceilingCom, floorCom
@@ -334,7 +325,7 @@ floor =
   )
 
 {-| Turns a `Float` into a `String` and rounds it to the given number of digits 
-after decimal point [the commercial way](https://en.wikipedia.org/wiki/Rounding#Round_half_towards_zero).
+after decimal point [the commercial way](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero).
 
     x = -0.5
 

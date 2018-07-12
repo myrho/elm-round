@@ -78,6 +78,8 @@ data =
     )
   ,(1.234e-22 ,"0" ,"0" ,"0" , "0.0" , "0.00")
   ,(-1.234e-22 ,"0" ,"0" ,"0" , "0.0" , "0.00")
+  ,(0/0, "NaN", "NaN", "NaN", "NaN", "NaN")
+  ,(1/0, "Infinity", "Infinity", "Infinity", "Infinity", "Infinity")
   ]
 
 roundTest : Test

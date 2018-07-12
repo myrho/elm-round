@@ -190,7 +190,10 @@ splitComma str =
 
 roundFun : (Bool -> String -> Bool) -> Int -> Float -> String
 roundFun functor s fl =
-  let
+  if isInfinite fl || isNaN fl then
+    Basics.toString fl
+  else
+    let
       (before, after) =
         abs fl
         |> toDecimal 
@@ -239,7 +242,7 @@ roundFun functor s fl =
           String.padRight s '0' after
           |> (++) (before ++ ".")
 
-    in
+     in
         numZeroed
         |> addSign signed
 

@@ -76,6 +76,8 @@ although we just wanted `3.1416`. Ugly.
 -}
 
 import String
+import Char
+import Tuple exposing (first)
 
 {-| Like Elm's basic `truncate` but works on the full length of a float's 64 
 bits. So it's more precise.
@@ -186,78 +188,96 @@ splitComma str =
       ("0","0")
 
 
-roundFun : (Float -> Int) -> Int -> Float -> String
+roundFun : (Bool -> String -> Bool) -> Int -> Float -> String
 roundFun functor s fl =
-  if s == 0 then 
-    functor fl |> Basics.toString
-  else if s < 0 then
-    toFloat s
-      |> abs 
-      |> (^) 10
-      |> (/) fl
-      |> roundFun functor 0
-      |> (\r ->
-            if r /= "0" then
-              r ++ (String.repeat (abs s) "0")
-            else
-              r
-         )
-  else
-      let
-        (before, after) =
-          toDecimal fl
-            |> splitComma 
-        a = 
-          after
-            |> String.padRight (s+1) '0'
+  let
+      (before, after) =
+        abs fl
+        |> toDecimal 
+        |> splitComma
+      signed =
+        fl < 0
+      r = 
+        String.length before + s
 
-        b = String.left s a
-        c = String.dropLeft s a 
-        e = 10^s
-        f =
-          ( if fl < 0
-            then "-"
-            else ""
-          ) ++"1"++b++"."++c
-            |> String.toFloat
-            |> Result.toMaybe
-            |> Maybe.withDefault (toFloat e)
-            |> functor
-        n =
-          if fl < 0
-            then -1
-            else 1
-        dd =
-          if fl < 0
-            then 2
-            else 1
-        g =
-          Basics.toString f |> String.dropLeft dd
+      normalized =
+        ( String.repeat (negate r + 1) "0")
+        ++ String.padRight r '0' (before ++ after)
 
-        h =
-          truncate fl
-          + ( if f - (e*n) == (e*n)
-                then 
-                  if fl < 0
-                    then -1
-                    else 1
-                else
-                  0
-            )
-
-        j = Basics.toString h
-
-        i =
-          if j == "0" && f-(e*n) /= 0 && fl < 0 && fl > -1
-            then "-" ++ j
-            else j
-      in
-        i
+      totalLen =
+        String.length normalized
+      roundDigitIndex =
+        max 1 r
+      increase =
+          normalized
+          |> String.slice roundDigitIndex totalLen
+          |> functor signed
+      remains =
+        String.slice 0 roundDigitIndex normalized
+      num =
+       if increase then
+         String.reverse remains
+         |> String.uncons
+         |> Maybe.map increaseNum
+         |> Maybe.withDefault "1"
+         |> String.reverse
+       else
+         remains
+      numLen =
+        String.length num
+      numZeroed =
+        if num == "0" then
+          num
+        else if s <= 0 then
+          String.repeat (abs s) "0"
+          |> (++) num
+        else if s < String.length after then
+          (String.slice 0 (numLen - s) num)
           ++ "."
-          ++ g
+          ++ (String.slice (numLen - s) numLen num)
+        else 
+          String.padRight s '0' after
+          |> (++) (before ++ ".")
 
-{-| Turns a `Float` into a `String` and rounds it to the given number of digits 
-after decimal point.
+    in
+        numZeroed
+        |> addSign signed
+
+
+
+addSign : Bool -> String -> String
+addSign signed str =
+  let
+      isNotZero =
+        String.toList str
+        |> List.any (\c -> c /= '0' && c /= '.')
+  in
+    (if signed && isNotZero then "-" else "")
+    ++ str
+
+
+increaseNum : (Char, String) -> String
+increaseNum (head, tail) =
+  if head == '9' then
+    case String.uncons tail of
+      Nothing ->
+        "01"
+      Just headtail ->
+        increaseNum headtail
+        |> String.cons '0'
+  else 
+    let
+        c = 
+          Char.toCode head
+    in
+        if c >= 48 && c < 57 then
+          String.cons (Char.fromCode <| c + 1) tail
+        else
+          "0"
+
+
+{-| Turns a `Float` into a `String` and [rounds](https://en.wikipedia.org/wiki/Rounding#Round_half_up) it to the given number of digits 
+after decimal point. Behaves like `Basics.round`.
 
     x = 3.141592653589793
 
@@ -273,7 +293,22 @@ The number of digits after decimal point can also be negative.
 -}
 round : Int -> Float -> String
 round =
-  roundFun Basics.round
+  roundFun (\signed str -> 
+    case String.uncons str of
+      Nothing ->
+        False
+      Just ('5', "") ->
+        not signed
+      Just ('5', _) ->
+        True
+      Just (int, _) ->
+        Char.toCode int
+        |> (\int -> 
+              int > 53 && signed
+              ||
+              int >= 53 && not signed
+            )
+  )
 
 {-| Turns a `Float` into a `String` and rounds it up to the given number of 
 digits after decimal point.
@@ -292,7 +327,17 @@ The number of digits after decimal point can also be negative.
 -}
 ceiling : Int -> Float -> String
 ceiling =
-  roundFun Basics.ceiling
+  roundFun (\signed str -> 
+    case String.uncons str of
+      Nothing ->
+        False
+      Just ('0', rest) ->
+        String.toList rest
+        |> List.any ((/=) '0')
+        |> (&&) (not signed)
+      _ ->
+        not signed
+  )
 
 {-| Turns a `Float` into a `String` and rounds it down to the given number of 
 digits after decimal point.
@@ -311,10 +356,20 @@ The number of digits after decimal point can also be negative.
 -}
 floor : Int -> Float -> String
 floor =
-  roundFun Basics.floor
+  roundFun (\signed str -> 
+    case String.uncons str of
+      Nothing ->
+        False
+      Just ('0', rest) ->
+        String.toList rest
+        |> List.any ((/=) '0')
+        |> (&&) (signed)
+      _ ->
+        signed
+  )
 
 {-| Turns a `Float` into a `String` and rounds it to the given number of digits 
-after decimal point the commercial way.
+after decimal point [the commercial way](https://en.wikipedia.org/wiki/Rounding#Round_half_towards_zero).
 
     x = -0.5
 
@@ -325,21 +380,14 @@ The number of digits after decimal point can also be negative.
 -}
 roundCom : Int -> Float -> String
 roundCom =
-  roundFun 
-    (\fl ->
-      let
-        dec = 
-          fl - (toFloat <| truncate fl)
-      in
-        if dec >= 0.5
-          then
-            Basics.ceiling fl
-        else if dec <= -0.5
-          then 
-            Basics.floor fl
-          else
-            Basics.round fl
-    )
+  roundFun (\_ int -> 
+      String.uncons int
+      |> Maybe.map first
+      |> Maybe.withDefault '0'
+      |> Char.toCode 
+      |> (<=) 53 
+      )
+
 
 {-| Turns a `Float` into a `String` and rounds it down to the given number of 
 digits after decimal point the commercial way.

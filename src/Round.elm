@@ -428,8 +428,8 @@ ceilingNumCom =
 
 funNum : (Int -> Float -> String) -> Int -> Float -> Float
 funNum fun s fl =
-  Maybe.withDefault (1/0)
-  <| Result.toMaybe
-  <| String.toFloat
-  <| fun s fl
+  fun s fl
+  |> String.toFloat
+  |> Result.toMaybe
+  |> Maybe.withDefault (0/0)
 

@@ -77,7 +77,7 @@ although we just wanted `3.1416`. Ugly.
 
 import String
 import Char
-import Tuple exposing (first)
+import Tuple exposing (first, mapFirst)
 
 {-| Like Elm's basic `truncate` but works on the full length of a float's 64 
 bits. So it's more precise.
@@ -104,8 +104,7 @@ as a `String`.
 -}
 toDecimal : Float -> String
 toDecimal fl =
-  case String.split "e"
-        <| Basics.toString fl of
+  case abs fl |> Basics.toString |> String.split "e"of
     num :: exp :: _ ->
       let
         e = 
@@ -115,65 +114,28 @@ toDecimal fl =
           ) |> String.toInt
             |> Result.toMaybe
             |> Maybe.withDefault 0
-        (sign, before,after) =
-          let
-            (b,a) =
-              splitComma num
-            hasSign =
-              fl < 0
-          in
-            ( if hasSign
-                then 
-                  "-"
-                else 
-                  ""
-            , if hasSign
-                then 
-                  String.dropLeft 1 b
-                else
-                  b
-            , a
-            )
+        (before, after) =
+          splitComma num 
 
-        newBefore = 
-          if e >= 0
-            then 
-              before
-            else
-              if abs e < String.length before
-                then
-                  String.left (String.length before - abs e) before
-                  ++
-                  "."
-                  ++
-                  String.right (abs e) before
-                else
-                  "0."
-                  ++
-                  String.repeat (abs e - String.length before) "0"
-                  ++
-                  before
-
-        newAfter =
-          if e <= 0
-            then 
-              after
-            else
-              if e < String.length after
-                then
-                  String.left e after
-                  ++
-                  "."
-                  ++
-                  String.right (String.length after - e) after
-                else
-                  after
-                  ++
-                  String.repeat (e - String.length after) "0"
+        total =
+          before++after
+        
+        zeroed =
+          if e < 0 then
+            String.repeat (abs e) "0" ++ total
+            |> String.uncons
+            |> Maybe.map (mapFirst String.fromChar)
+            |> Maybe.map (\(a,b) -> a ++ "." ++ b)
+            |> Maybe.withDefault "0"
+          else
+            String.padRight (e+1) '0' total
       in
-        sign ++ newBefore ++ newAfter
+          (if fl < 0 then "-" else "")
+          ++ zeroed
+
     num :: _ ->
-      num
+      (if fl < 0 then "-" else "")
+      ++ num
     _ ->
       ""
 

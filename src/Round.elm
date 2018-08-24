@@ -121,7 +121,7 @@ as a `String`.
 -}
 toDecimal : Float -> String
 toDecimal fl =
-    case abs fl |> Basics.toString |> String.split "e" of
+    case abs fl |> String.fromFloat |> String.split "e" of
         num :: exp :: _ ->
             let
                 e =
@@ -131,7 +131,6 @@ toDecimal fl =
                         exp
                     )
                         |> String.toInt
-                        |> Result.toMaybe
                         |> Maybe.withDefault 0
 
                 ( before, after ) =
@@ -186,7 +185,7 @@ splitComma str =
 roundFun : (Bool -> String -> Bool) -> Int -> Float -> String
 roundFun functor s fl =
     if isInfinite fl || isNaN fl then
-        Basics.toString fl
+        String.fromFloat fl
     else
         let
             ( before, after ) =
@@ -319,9 +318,9 @@ round =
 
                 Just ( int, _ ) ->
                     Char.toCode int
-                        |> (\int ->
-                                (int > 53 && signed)
-                                    || (int >= 53 && not signed)
+                        |> (\i ->
+                                (i > 53 && signed)
+                                    || (i >= 53 && not signed)
                            )
         )
 
@@ -502,5 +501,4 @@ funNum : (Int -> Float -> String) -> Int -> Float -> Float
 funNum fun s fl =
     fun s fl
         |> String.toFloat
-        |> Result.toMaybe
         |> Maybe.withDefault (0 / 0)

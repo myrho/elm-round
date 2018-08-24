@@ -3,7 +3,7 @@
     "name": "myrho/elm-round",
     "summary": "Round floats (mathematically/commercially) to a given number of decimal places",
     "license": "BSD-3-Clause",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "exposed-modules": [
         "Round"
     ],

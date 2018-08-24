@@ -76,6 +76,7 @@ import Round
 
 | Version | Notes |
 | ------- | ----- |
+| 1.0.4   | Upgrade to Elm 0.19 |
 | 1.0.3   | Fix issues with number in scientific notation, complete rewrite. |
 | 1.0.2   | Given number of digits after decimal point can be negative. |
 | 1.0.1   | Upgrade to Elm 0.18 |

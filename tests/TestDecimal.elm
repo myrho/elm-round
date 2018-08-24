@@ -2,7 +2,6 @@ module TestDecimal exposing (decimalTest)
 
 import Test exposing (..)
 import Expect exposing (equal)
-import TestData exposing (dataFloat)
 import Round
 
 
@@ -31,7 +30,7 @@ decimalTest =
     describe "decimal"
         (List.map
             (\( b, a ) ->
-                test ("toDecimal " ++ (toString b) ++ " to " ++ a) <|
+                test ("toDecimal " ++ (String.fromFloat b) ++ " to " ++ a) <|
                     \() -> equal a (Round.toDecimal b)
             )
             data

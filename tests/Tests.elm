@@ -1,7 +1,6 @@
 module Tests exposing (..)
 
-import Test exposing (..)
-import Expect exposing (equal)
+import Test exposing (Test, describe)
 import TestRound exposing (..)
 import TestRoundCom exposing (..)
 import TestFloor exposing (..)

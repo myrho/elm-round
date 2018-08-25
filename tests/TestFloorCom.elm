@@ -1,7 +1,6 @@
 module TestFloorCom exposing (floorComTest)
 
 import Test exposing (..)
-import Expect exposing (equal)
 import TestFunction exposing (..)
 import Round
 

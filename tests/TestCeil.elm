@@ -1,7 +1,6 @@
 module TestCeil exposing (ceilTest)
 
 import Test exposing (..)
-import Expect exposing (equal)
 import TestFunction exposing (..)
 import Round
 

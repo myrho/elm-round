@@ -64,7 +64,7 @@ char-wise. Hence it's safe from floating point arithmetic weirdness.
 
 From the root of your [Elm](http://elm-lang.org) project run
 
-    elm package install myrho/elm-round
+    elm install myrho/elm-round
 
 Import it in your Elm modules:
 

@@ -3,7 +3,7 @@
 This library converts a `Float` to a `String` with ultimate 
 control how many digits after the decimal point are shown and how the remaining 
 digits are rounded. It rounds, floors and ceils the "common" way (ie. [half 
-up](https://en.wikipedia.org/wiki/Rounding#Round_half_up)) or the "commerical" 
+up](https://en.wikipedia.org/wiki/Rounding#Round_half_up)) or the "commercial" 
 way (ie. [half away from 
 zero](https://en.wikipedia.org/wiki/Rounding#Round_half_away_from_zero)). 
 

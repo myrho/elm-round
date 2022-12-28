@@ -1,20 +1,8 @@
-module Round
-    exposing
-        ( round
-        , ceiling
-        , floor
-        , roundCom
-        , ceilingCom
-        , floorCom
-        , roundNum
-        , floorNum
-        , ceilingNum
-        , roundNumCom
-        , floorNumCom
-        , ceilingNumCom
-        , toDecimal
-        , truncate
-        )
+module Round exposing
+    ( round, ceiling, floor, roundCom, ceilingCom, floorCom
+    , roundNum, ceilingNum, floorNum, roundNumCom, ceilingNumCom, floorNumCom
+    , toDecimal, truncate
+    )
 
 {-| This library converts a `Float` to a `String` with ultimate
 control how many digits after the decimal point are shown and how the remaining
@@ -83,12 +71,12 @@ char-wise. Hence it's safe from floating point arithmetic weirdness.
 
 # Utility functions
 
-@docs toDecimal, truncate
+@docs toDecimal, truncate, roundSig
 
 -}
 
-import String
 import Char
+import String
 import Tuple exposing (first, mapFirst)
 
 
@@ -105,6 +93,7 @@ truncate : Float -> Int
 truncate n =
     if n < 0 then
         Basics.ceiling n
+
     else
         Basics.floor n
 
@@ -127,6 +116,7 @@ toDecimal fl =
                 e =
                     (if String.startsWith "+" exp then
                         String.dropLeft 1 exp
+
                      else
                         exp
                     )
@@ -147,19 +137,22 @@ toDecimal fl =
                             |> Maybe.map (mapFirst String.fromChar)
                             |> Maybe.map (\( a, b ) -> a ++ "." ++ b)
                             |> Maybe.withDefault "0"
+
                     else
                         String.padRight (e + 1) '0' total
             in
-                (if fl < 0 then
-                    "-"
-                 else
-                    ""
-                )
-                    ++ zeroed
+            (if fl < 0 then
+                "-"
+
+             else
+                ""
+            )
+                ++ zeroed
 
         num :: _ ->
             (if fl < 0 then
                 "-"
+
              else
                 ""
             )
@@ -186,6 +179,7 @@ roundFun : (Bool -> String -> Bool) -> Int -> Float -> String
 roundFun functor s fl =
     if isInfinite fl || isNaN fl then
         String.fromFloat fl
+
     else
         let
             ( before, after ) =
@@ -200,7 +194,7 @@ roundFun functor s fl =
                 String.length before + s
 
             normalized =
-                (String.repeat (negate r + 1) "0")
+                String.repeat (negate r + 1) "0"
                     ++ String.padRight r '0' (before ++ after)
 
             totalLen =
@@ -224,6 +218,7 @@ roundFun functor s fl =
                         |> Maybe.map increaseNum
                         |> Maybe.withDefault "1"
                         |> String.reverse
+
                 else
                     remains
 
@@ -233,19 +228,22 @@ roundFun functor s fl =
             numZeroed =
                 if num == "0" then
                     num
+
                 else if s <= 0 then
                     String.repeat (abs s) "0"
                         |> (++) num
+
                 else if s < String.length after then
-                    (String.slice 0 (numLen - s) num)
+                    String.slice 0 (numLen - s) num
                         ++ "."
-                        ++ (String.slice (numLen - s) numLen num)
+                        ++ String.slice (numLen - s) numLen num
+
                 else
                     String.padRight s '0' after
                         |> (++) (before ++ ".")
         in
-            numZeroed
-                |> addSign signed
+        numZeroed
+            |> addSign signed
 
 
 addSign : Bool -> String -> String
@@ -255,12 +253,13 @@ addSign signed str =
             String.toList str
                 |> List.any (\c -> c /= '0' && c /= '.')
     in
-        (if signed && isNotZero then
-            "-"
-         else
-            ""
-        )
-            ++ str
+    (if signed && isNotZero then
+        "-"
+
+     else
+        ""
+    )
+        ++ str
 
 
 increaseNum : ( Char, String ) -> String
@@ -273,15 +272,17 @@ increaseNum ( head, tail ) =
             Just headtail ->
                 increaseNum headtail
                     |> String.cons '0'
+
     else
         let
             c =
                 Char.toCode head
         in
-            if c >= 48 && c < 57 then
-                String.cons (Char.fromCode <| c + 1) tail
-            else
-                "0"
+        if c >= 48 && c < 57 then
+            String.cons (Char.fromCode <| c + 1) tail
+
+        else
+            "0"
 
 
 {-| Turns a `Float` into a `String` and
@@ -386,7 +387,7 @@ floor =
                 Just ( '0', rest ) ->
                     String.toList rest
                         |> List.any ((/=) '0')
-                        |> (&&) (signed)
+                        |> (&&) signed
 
                 _ ->
                     signed
@@ -432,6 +433,7 @@ floorCom : Int -> Float -> String
 floorCom s fl =
     if fl < 0 then
         ceiling s fl
+
     else
         floor s fl
 
@@ -451,6 +453,7 @@ ceilingCom : Int -> Float -> String
 ceilingCom s fl =
     if fl < 0 then
         floor s fl
+
     else
         ceiling s fl
 
@@ -502,3 +505,14 @@ funNum fun s fl =
     fun s fl
         |> String.toFloat
         |> Maybe.withDefault (0 / 0)
+
+
+{-| Round a number to a given number of significant digits, i.e. the first n digits irrespective of the number's actual size.
+-}
+roundSig : Int -> Float -> String
+roundSig digits num =
+    let
+        s =
+            logBase 10 num |> truncate
+    in
+    round (digits - s - 1) num
